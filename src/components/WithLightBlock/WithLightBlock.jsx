@@ -1,23 +1,32 @@
+import New from '../New/New';
+import Popular from '../Popular/Popular';
 import PropTypes from 'prop-types';
 
-function Video(props) {
-    return (
-        <div className="item item-video">
-            <iframe 
-                title="video"
-                src={props.url} 
-                frameborder="0" 
-                allow="autoplay; encrypted-media" 
-                allowfullscreen
-            ></iframe>
-            <p className="views">Просмотров: {props.views}</p>
-        </div>
-    )
-};
+function WithLightBlock(Component) {
+    return function WithLightBlock(props) {
+        
+        if (props.views < 100) {
+            return (
+                <New>
+                    <Component {...props} />
+                </New>
+            )
+        }
 
-Video.propTypes = {
-    url: PropTypes.string,
-    views: PropTypes.number
+        if (props.views > 1000) {
+            return (
+                <Popular>
+                    <Component {...props} />
+                </Popular>
+            )   
+        }
+
+        return <Component {...props} />
+    }
 }
 
-export default Video
+WithLightBlock.propTypes = {
+    props: PropTypes.object
+}
+
+export default WithLightBlock
